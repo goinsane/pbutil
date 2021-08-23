@@ -30,15 +30,9 @@
 
 syntax = "proto3";
 
-package google.protobuf;
+package goinsane.pbutil;
 
-option csharp_namespace = "Google.Protobuf.WellKnownTypes";
-option cc_enable_arenas = true;
 option go_package = "github.com/goinsane/pbutil/types/known/durationpb";
-option java_package = "com.google.protobuf";
-option java_outer_classname = "DurationProto";
-option java_multiple_files = true;
-option objc_class_prefix = "GPB";
 
 // A Duration represents a signed, fixed-length span of time represented
 // as a count of seconds and fractions of seconds at nanosecond

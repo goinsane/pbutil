@@ -2,8 +2,8 @@ syntax = "proto3";
 package goinsane.pbutil;
 option go_package = "github.com/goinsane/pbutil/examplespb";
 
-import "goinsane/pbutil/protobuf/timestamp.proto";
-import "goinsane/pbutil/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 message ExampleData {
     bool bool_value = 1;
