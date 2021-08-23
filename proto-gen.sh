@@ -5,14 +5,20 @@ set -e pipefail
 cd "$(dirname "$0")/."
 mkdir -p target/
 
+PKG="github.com/goinsane/pbutil"
+
 go build -mod readonly -o target/ \
   google.golang.org/protobuf/cmd/protoc-gen-go
 PATH="target/:$PATH"
 
-rm -f -- *.pb.go
-protoc --go_out=./ --go_opt=module=github.com/goinsane/pbutil -I proto/ proto/goinsane/pbutil/*.proto
+#rm -f -- *.pb.go
+#protoc --go_out=./ --go_opt=module="$PKG" -I proto/ proto/goinsane/pbutil/*.proto
+rm -f -- examples/*.pb.go
+protoc --go_out=./ --go_opt=module="$PKG" -I proto/ proto/goinsane/pbutil/examples/*.proto
 
 find types -depth -type f -name \*.pb.go -delete
 find types -type d -empty -delete
-protoc --go_out=./ --go_opt=module=google.golang.org/protobuf -I proto/ proto/google/protobuf/*.proto
-protoc --go_out=./ --go_opt=module=google.golang.org/protobuf -I proto/ proto/google/protobuf/compiler/*.proto
+#protoc --go_out=./ --go_opt=module=google.golang.org/protobuf -I proto/ proto/google/protobuf/*.proto
+#protoc --go_out=./ --go_opt=module=google.golang.org/protobuf -I proto/ proto/google/protobuf/compiler/*.proto
+protoc --go_out=./ --go_opt=module="$PKG" -I proto/ proto/goinsane/pbutil/protobuf/*.proto
+protoc --go_out=./ --go_opt=module="$PKG" -I proto/ proto/goinsane/pbutil/protobuf/compiler/*.proto

@@ -32,52 +32,8 @@
 // versions:
 // 	protoc-gen-go v1.26.0
 // 	protoc        v3.17.3
-// source: google/protobuf/field_mask.proto
+// source: goinsane/pbutil/protobuf/field_mask.proto
 
-// Package fieldmaskpb contains generated types for google/protobuf/field_mask.proto.
-//
-// The FieldMask message represents a set of symbolic field paths.
-// The paths are specific to some target message type,
-// which is not stored within the FieldMask message itself.
-//
-//
-// Constructing a FieldMask
-//
-// The New function is used construct a FieldMask:
-//
-//	var messageType *descriptorpb.DescriptorProto
-//	fm, err := fieldmaskpb.New(messageType, "field.name", "field.number")
-//	if err != nil {
-//		... // handle error
-//	}
-//	... // make use of fm
-//
-// The "field.name" and "field.number" paths are valid paths according to the
-// google.protobuf.DescriptorProto message. Use of a path that does not correlate
-// to valid fields reachable from DescriptorProto would result in an error.
-//
-// Once a FieldMask message has been constructed,
-// the Append method can be used to insert additional paths to the path set:
-//
-//	var messageType *descriptorpb.DescriptorProto
-//	if err := fm.Append(messageType, "options"); err != nil {
-//		... // handle error
-//	}
-//
-//
-// Type checking a FieldMask
-//
-// In order to verify that a FieldMask represents a set of fields that are
-// reachable from some target message type, use the IsValid method:
-//
-//	var messageType *descriptorpb.DescriptorProto
-//	if fm.IsValid(messageType) {
-//		... // make use of fm
-//	}
-//
-// IsValid needs to be passed the target message type as an input since the
-// FieldMask message itself does not store the message type that the set of paths
-// are for.
 package fieldmaskpb
 
 import (
@@ -481,7 +437,7 @@ func rangeFields(path string, f func(field string) bool) bool {
 func (x *FieldMask) Reset() {
 	*x = FieldMask{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_google_protobuf_field_mask_proto_msgTypes[0]
+		mi := &file_goinsane_pbutil_protobuf_field_mask_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -494,7 +450,7 @@ func (x *FieldMask) String() string {
 func (*FieldMask) ProtoMessage() {}
 
 func (x *FieldMask) ProtoReflect() protoreflect.Message {
-	mi := &file_google_protobuf_field_mask_proto_msgTypes[0]
+	mi := &file_goinsane_pbutil_protobuf_field_mask_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -507,7 +463,7 @@ func (x *FieldMask) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FieldMask.ProtoReflect.Descriptor instead.
 func (*FieldMask) Descriptor() ([]byte, []int) {
-	return file_google_protobuf_field_mask_proto_rawDescGZIP(), []int{0}
+	return file_goinsane_pbutil_protobuf_field_mask_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *FieldMask) GetPaths() []string {
@@ -517,43 +473,43 @@ func (x *FieldMask) GetPaths() []string {
 	return nil
 }
 
-var File_google_protobuf_field_mask_proto protoreflect.FileDescriptor
+var File_goinsane_pbutil_protobuf_field_mask_proto protoreflect.FileDescriptor
 
-var file_google_protobuf_field_mask_proto_rawDesc = []byte{
-	0x0a, 0x20, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75,
-	0x66, 0x2f, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x5f, 0x6d, 0x61, 0x73, 0x6b, 0x2e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x12, 0x0f, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x62, 0x75, 0x66, 0x22, 0x21, 0x0a, 0x09, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x4d, 0x61, 0x73, 0x6b,
-	0x12, 0x14, 0x0a, 0x05, 0x70, 0x61, 0x74, 0x68, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52,
-	0x05, 0x70, 0x61, 0x74, 0x68, 0x73, 0x42, 0x85, 0x01, 0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x67,
-	0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x42, 0x0e,
-	0x46, 0x69, 0x65, 0x6c, 0x64, 0x4d, 0x61, 0x73, 0x6b, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01,
-	0x5a, 0x32, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x67, 0x6f, 0x6c, 0x61, 0x6e, 0x67, 0x2e,
-	0x6f, 0x72, 0x67, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x74, 0x79, 0x70,
-	0x65, 0x73, 0x2f, 0x6b, 0x6e, 0x6f, 0x77, 0x6e, 0x2f, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x6d, 0x61,
-	0x73, 0x6b, 0x70, 0x62, 0xf8, 0x01, 0x01, 0xa2, 0x02, 0x03, 0x47, 0x50, 0x42, 0xaa, 0x02, 0x1e,
-	0x47, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
-	0x57, 0x65, 0x6c, 0x6c, 0x4b, 0x6e, 0x6f, 0x77, 0x6e, 0x54, 0x79, 0x70, 0x65, 0x73, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+var file_goinsane_pbutil_protobuf_field_mask_proto_rawDesc = []byte{
+	0x0a, 0x29, 0x67, 0x6f, 0x69, 0x6e, 0x73, 0x61, 0x6e, 0x65, 0x2f, 0x70, 0x62, 0x75, 0x74, 0x69,
+	0x6c, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x66, 0x69, 0x65, 0x6c, 0x64,
+	0x5f, 0x6d, 0x61, 0x73, 0x6b, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0f, 0x67, 0x6f, 0x6f,
+	0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x22, 0x21, 0x0a, 0x09,
+	0x46, 0x69, 0x65, 0x6c, 0x64, 0x4d, 0x61, 0x73, 0x6b, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x61, 0x74,
+	0x68, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x05, 0x70, 0x61, 0x74, 0x68, 0x73, 0x42,
+	0x85, 0x01, 0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x42, 0x0e, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x4d, 0x61,
+	0x73, 0x6b, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x32, 0x67, 0x69, 0x74, 0x68, 0x75,
+	0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x67, 0x6f, 0x69, 0x6e, 0x73, 0x61, 0x6e, 0x65, 0x2f, 0x70,
+	0x62, 0x75, 0x74, 0x69, 0x6c, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2f, 0x6b, 0x6e, 0x6f, 0x77,
+	0x6e, 0x2f, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x6d, 0x61, 0x73, 0x6b, 0x70, 0x62, 0xf8, 0x01, 0x01,
+	0xa2, 0x02, 0x03, 0x47, 0x50, 0x42, 0xaa, 0x02, 0x1e, 0x47, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e,
+	0x50, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x57, 0x65, 0x6c, 0x6c, 0x4b, 0x6e, 0x6f,
+	0x77, 0x6e, 0x54, 0x79, 0x70, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_google_protobuf_field_mask_proto_rawDescOnce sync.Once
-	file_google_protobuf_field_mask_proto_rawDescData = file_google_protobuf_field_mask_proto_rawDesc
+	file_goinsane_pbutil_protobuf_field_mask_proto_rawDescOnce sync.Once
+	file_goinsane_pbutil_protobuf_field_mask_proto_rawDescData = file_goinsane_pbutil_protobuf_field_mask_proto_rawDesc
 )
 
-func file_google_protobuf_field_mask_proto_rawDescGZIP() []byte {
-	file_google_protobuf_field_mask_proto_rawDescOnce.Do(func() {
-		file_google_protobuf_field_mask_proto_rawDescData = protoimpl.X.CompressGZIP(file_google_protobuf_field_mask_proto_rawDescData)
+func file_goinsane_pbutil_protobuf_field_mask_proto_rawDescGZIP() []byte {
+	file_goinsane_pbutil_protobuf_field_mask_proto_rawDescOnce.Do(func() {
+		file_goinsane_pbutil_protobuf_field_mask_proto_rawDescData = protoimpl.X.CompressGZIP(file_goinsane_pbutil_protobuf_field_mask_proto_rawDescData)
 	})
-	return file_google_protobuf_field_mask_proto_rawDescData
+	return file_goinsane_pbutil_protobuf_field_mask_proto_rawDescData
 }
 
-var file_google_protobuf_field_mask_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_google_protobuf_field_mask_proto_goTypes = []interface{}{
+var file_goinsane_pbutil_protobuf_field_mask_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_goinsane_pbutil_protobuf_field_mask_proto_goTypes = []interface{}{
 	(*FieldMask)(nil), // 0: google.protobuf.FieldMask
 }
-var file_google_protobuf_field_mask_proto_depIdxs = []int32{
+var file_goinsane_pbutil_protobuf_field_mask_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -561,13 +517,13 @@ var file_google_protobuf_field_mask_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_google_protobuf_field_mask_proto_init() }
-func file_google_protobuf_field_mask_proto_init() {
-	if File_google_protobuf_field_mask_proto != nil {
+func init() { file_goinsane_pbutil_protobuf_field_mask_proto_init() }
+func file_goinsane_pbutil_protobuf_field_mask_proto_init() {
+	if File_goinsane_pbutil_protobuf_field_mask_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_google_protobuf_field_mask_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_goinsane_pbutil_protobuf_field_mask_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FieldMask); i {
 			case 0:
 				return &v.state
@@ -584,18 +540,18 @@ func file_google_protobuf_field_mask_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_google_protobuf_field_mask_proto_rawDesc,
+			RawDescriptor: file_goinsane_pbutil_protobuf_field_mask_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_google_protobuf_field_mask_proto_goTypes,
-		DependencyIndexes: file_google_protobuf_field_mask_proto_depIdxs,
-		MessageInfos:      file_google_protobuf_field_mask_proto_msgTypes,
+		GoTypes:           file_goinsane_pbutil_protobuf_field_mask_proto_goTypes,
+		DependencyIndexes: file_goinsane_pbutil_protobuf_field_mask_proto_depIdxs,
+		MessageInfos:      file_goinsane_pbutil_protobuf_field_mask_proto_msgTypes,
 	}.Build()
-	File_google_protobuf_field_mask_proto = out.File
-	file_google_protobuf_field_mask_proto_rawDesc = nil
-	file_google_protobuf_field_mask_proto_goTypes = nil
-	file_google_protobuf_field_mask_proto_depIdxs = nil
+	File_goinsane_pbutil_protobuf_field_mask_proto = out.File
+	file_goinsane_pbutil_protobuf_field_mask_proto_rawDesc = nil
+	file_goinsane_pbutil_protobuf_field_mask_proto_goTypes = nil
+	file_goinsane_pbutil_protobuf_field_mask_proto_depIdxs = nil
 }
