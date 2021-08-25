@@ -26,7 +26,7 @@ func (x *Duration) AsNanos() *big.Int {
 
 func (x *Duration) asAnyseconds(divider int64) int64 {
 	b := x.AsNanos()
-	b.Div(b, big.NewInt(divider))
+	b.Quo(b, big.NewInt(divider))
 	result := b.Int64()
 	if !b.IsInt64() {
 		if b.Sign() >= 0 {
@@ -65,7 +65,7 @@ func (x *Duration) AsSeconds() int64 {
 func newByAnyseconds(d int64, multiplier int64) *Duration {
 	b := big.NewInt(d)
 	b = b.Mul(b, big.NewInt(multiplier))
-	b, m := b.DivMod(b, big.NewInt(1e9), new(big.Int))
+	b, m := b.QuoRem(b, big.NewInt(1e9), new(big.Int))
 	secs, nanos := b.Int64(), m.Int64()
 	if !b.IsInt64() {
 		if b.Sign() >= 0 {
