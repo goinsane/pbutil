@@ -5,6 +5,7 @@ import (
 	"math/big"
 )
 
+// Duplicate duplicates the Timestamp without any check.
 func (x *Timestamp) Duplicate() *Timestamp {
 	if x == nil {
 		return nil
@@ -15,6 +16,8 @@ func (x *Timestamp) Duplicate() *Timestamp {
 	}
 }
 
+// IsZero checks whether the Timestamp is zero.
+// If the Timestamp is nil or zero as time.Time, it returns true. Otherwise, returns false.
 func (x *Timestamp) IsZero() bool {
 	if x == nil {
 		return true
@@ -25,6 +28,7 @@ func (x *Timestamp) IsZero() bool {
 	return true
 }
 
+// AsNanos returns unix timestamp by nanoseconds as big.Int.
 func (x *Timestamp) AsNanos() *big.Int {
 	result := big.NewInt(x.GetSeconds())
 	result.Mul(result, big.NewInt(1e9))
@@ -46,23 +50,31 @@ func (x *Timestamp) asAnyseconds(divider int64) int64 {
 	return result
 }
 
+// AsNanoseconds returns unix timestamp by nanoseconds as int64.
+// If the result is out of range, it returns math.MaxInt64 or math.MinInt64.
 func (x *Timestamp) AsNanoseconds() int64 {
 	return x.asAnyseconds(1)
 }
 
+// AsMicroseconds returns unix timestamp by microseconds as int64.
+// If the result is out of range, it returns math.MaxInt64 or math.MinInt64.
 func (x *Timestamp) AsMicroseconds() int64 {
 	return x.asAnyseconds(1e3)
 }
 
+// AsMilliseconds returns unix timestamp by milliseconds as int64.
+// If the result is out of range, it returns math.MaxInt64 or math.MinInt64.
 func (x *Timestamp) AsMilliseconds() int64 {
 	return x.asAnyseconds(1e6)
 }
 
+// AsSeconds returns unix timestamp by seconds as int64.
+// If the result is out of range, it returns math.MaxInt64 or math.MinInt64.
 func (x *Timestamp) AsSeconds() int64 {
 	return x.asAnyseconds(1e9)
 }
 
-func fromAnyseconds(d int64, multiplier int64) *Timestamp {
+func newByAnyseconds(d int64, multiplier int64) *Timestamp {
 	b := big.NewInt(d)
 	b = b.Mul(b, big.NewInt(multiplier))
 	b, m := b.DivMod(b, big.NewInt(1e9), new(big.Int))
@@ -80,18 +92,22 @@ func fromAnyseconds(d int64, multiplier int64) *Timestamp {
 	}
 }
 
-func FromNanoseconds(d int64) *Timestamp {
-	return fromAnyseconds(d, 1)
+// NewByNanoseconds constructs a new Timestamp from the provided int64 unix timestamp by nanoseconds.
+func NewByNanoseconds(d int64) *Timestamp {
+	return newByAnyseconds(d, 1)
 }
 
-func FromMicroseconds(d int64) *Timestamp {
-	return fromAnyseconds(d, 1e3)
+// NewByMicroseconds constructs a new Timestamp from the provided int64 unix timestamp by microseconds.
+func NewByMicroseconds(d int64) *Timestamp {
+	return newByAnyseconds(d, 1e3)
 }
 
-func FromMilliseconds(d int64) *Timestamp {
-	return fromAnyseconds(d, 1e6)
+// NewByMilliseconds constructs a new Timestamp from the provided int64 unix timestamp by milliseconds.
+func NewByMilliseconds(d int64) *Timestamp {
+	return newByAnyseconds(d, 1e6)
 }
 
-func FromSeconds(d int64) *Timestamp {
-	return fromAnyseconds(d, 1e9)
+// NewBySeconds constructs a new Timestamp from the provided int64 unix timestamp by seconds.
+func NewBySeconds(d int64) *Timestamp {
+	return newByAnyseconds(d, 1e9)
 }

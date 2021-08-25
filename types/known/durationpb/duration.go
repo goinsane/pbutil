@@ -5,6 +5,7 @@ import (
 	"math/big"
 )
 
+// Duplicate duplicates the Duration without any check.
 func (x *Duration) Duplicate() *Duration {
 	if x == nil {
 		return nil
@@ -15,6 +16,7 @@ func (x *Duration) Duplicate() *Duration {
 	}
 }
 
+// AsNanos returns nanoseconds as big.Int.
 func (x *Duration) AsNanos() *big.Int {
 	result := big.NewInt(x.GetSeconds())
 	result.Mul(result, big.NewInt(1e9))
@@ -36,23 +38,31 @@ func (x *Duration) asAnyseconds(divider int64) int64 {
 	return result
 }
 
+// AsNanoseconds returns nanoseconds as int64.
+// If the result is out of range, it returns math.MaxInt64 or math.MinInt64.
 func (x *Duration) AsNanoseconds() int64 {
 	return x.asAnyseconds(1)
 }
 
+// AsMicroseconds returns microseconds as int64.
+// If the result is out of range, it returns math.MaxInt64 or math.MinInt64.
 func (x *Duration) AsMicroseconds() int64 {
 	return x.asAnyseconds(1e3)
 }
 
+// AsMilliseconds returns milliseconds as int64.
+// If the result is out of range, it returns math.MaxInt64 or math.MinInt64.
 func (x *Duration) AsMilliseconds() int64 {
 	return x.asAnyseconds(1e6)
 }
 
+// AsSeconds returns seconds as int64.
+// If the result is out of range, it returns math.MaxInt64 or math.MinInt64.
 func (x *Duration) AsSeconds() int64 {
 	return x.asAnyseconds(1e9)
 }
 
-func fromAnyseconds(d int64, multiplier int64) *Duration {
+func newByAnyseconds(d int64, multiplier int64) *Duration {
 	b := big.NewInt(d)
 	b = b.Mul(b, big.NewInt(multiplier))
 	b, m := b.DivMod(b, big.NewInt(1e9), new(big.Int))
@@ -70,18 +80,22 @@ func fromAnyseconds(d int64, multiplier int64) *Duration {
 	}
 }
 
-func FromNanoseconds(d int64) *Duration {
-	return fromAnyseconds(d, 1)
+// NewByNanoseconds constructs a new Duration from the provided int64 by nanoseconds.
+func NewByNanoseconds(d int64) *Duration {
+	return newByAnyseconds(d, 1)
 }
 
-func FromMicroseconds(d int64) *Duration {
-	return fromAnyseconds(d, 1e3)
+// NewByFromMicroseconds constructs a new Duration from the provided int64 by microseconds.
+func NewByFromMicroseconds(d int64) *Duration {
+	return newByAnyseconds(d, 1e3)
 }
 
-func FromMilliseconds(d int64) *Duration {
-	return fromAnyseconds(d, 1e6)
+// NewByMilliseconds constructs a new Duration from the provided int64 by milliseconds.
+func NewByMilliseconds(d int64) *Duration {
+	return newByAnyseconds(d, 1e6)
 }
 
-func FromSeconds(d int64) *Duration {
-	return fromAnyseconds(d, 1e9)
+// NewBySeconds constructs a new Duration from the provided int64 by seconds.
+func NewBySeconds(d int64) *Duration {
+	return newByAnyseconds(d, 1e9)
 }
