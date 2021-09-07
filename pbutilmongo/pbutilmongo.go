@@ -1,4 +1,4 @@
-package pbutilbson
+package pbutilmongo
 
 func init() {
 	// TODO: implement package
