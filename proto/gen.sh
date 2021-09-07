@@ -2,7 +2,7 @@
 
 set -e pipefail
 
-cd "$(dirname "$0")/."
+cd "$(dirname "$0")/.."
 mkdir -p target/
 
 PKG="github.com/goinsane/pbutil"
@@ -19,5 +19,5 @@ find types -depth -type f -name \*.pb.go -delete
 find types -type d -empty -delete
 protoc --go_out=./ --go_opt=module="$PKG" -I proto/ proto/goinsane/pbutil/protobuf/*.proto
 
-rm -f -- examples/*.pb.go
+rm -f -- examplespb/*.pb.go
 protoc --go_out=./ --go_opt=module="$PKG" -I proto/ proto/goinsane/pbutil/examples/*.proto
