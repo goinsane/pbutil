@@ -30,7 +30,7 @@
 
 syntax = "proto3";
 
-package goinsane.pbutil;
+package goinsane.pbutil.protobuf;
 
 option go_package = "github.com/goinsane/pbutil/types/known/timestamppb";
 
