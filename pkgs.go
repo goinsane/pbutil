@@ -1,3 +1,4 @@
+//go:build pkgs
 // +build pkgs
 
 package pbutil
