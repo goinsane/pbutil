@@ -1,4 +1,4 @@
-module github.com/goinsane/pbutil/pbutilmongo
+module github.com/goinsane/pbutil/mongopb
 
 go 1.13
 
