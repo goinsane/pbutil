@@ -1,6 +1,3 @@
-package pbutilmongo
+// Package pbutilmongo provides protobuf utilities for MongoDB.
 
-func init() {
-	// TODO: implement package
-	//panic("implement me")
-}
+package pbutilmongo
