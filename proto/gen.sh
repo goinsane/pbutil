@@ -15,5 +15,5 @@ PATH="target/:$PATH"
 #protoc --go_out=./target/src/ --go_opt= -I proto/ proto/google/protobuf/*.proto
 #protoc --go_out=./target/src/ --go_opt= -I proto/ proto/google/protobuf/compiler/*.proto
 
-rm -f -- pbutilmongo/*.pb.go
-protoc --go_out=./ --go_opt=module="$PKG" -I proto/ proto/goinsane/pbutil/pbutilmongo.proto
+rm -f -- mongopb/*.pb.go
+protoc --go_out=./ --go_opt=module="$PKG" -I proto/ proto/goinsane/pbutil/mongo.proto

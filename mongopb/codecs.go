@@ -1,4 +1,4 @@
-package pbutilmongo
+package mongopb
 
 import (
 	"reflect"
