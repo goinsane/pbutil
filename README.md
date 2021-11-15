@@ -7,9 +7,8 @@ Please see [godoc](https://pkg.go.dev/github.com/goinsane/pbutil).
 
 ## Proto packages
 
-The `proto` (`github.com/goinsane/pbutil/proto`) folder provides those major proto packages:
+The `proto` (`github.com/goinsane/pbutil/proto`) folder provides those proto packages:
 * **goinsane.pbutil** in `goinsane/pbutil/`
-* **goinsane.pbutil.protobuf** (pbutil's protobuf) in `goinsane/pbutil/protobuf/`
 * **google.protobuf** (Google's protobuf) in `google/protobuf/`
 
 The `proto` folder can be used directly as include path for `protoc`. 
