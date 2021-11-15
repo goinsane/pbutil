@@ -4,14 +4,18 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/goinsane/pbutil"
 	"go.mongodb.org/mongo-driver/bson/bsoncodec"
 	"go.mongodb.org/mongo-driver/bson/bsonrw"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 var (
+	primitiveNullType = reflect.TypeOf(*new(primitive.Null))
+
 	boolValueType   = reflect.TypeOf(new(wrapperspb.BoolValue))
 	bytesValueType  = reflect.TypeOf(new(wrapperspb.BytesValue))
 	doubleValueType = reflect.TypeOf(new(wrapperspb.DoubleValue))
@@ -29,28 +33,51 @@ var (
 	goTimeType     = reflect.TypeOf(*new(time.Time))
 )
 
+func encodeNull(ec bsoncodec.EncodeContext, vw bsonrw.ValueWriter) error {
+	enc, err := ec.LookupEncoder(primitiveNullType)
+	if err != nil {
+		return err
+	}
+	return enc.EncodeValue(ec, vw, reflect.New(primitiveNullType).Elem())
+}
+
+func decodeNull(dc bsoncodec.DecodeContext, vr bsonrw.ValueReader) (bool, error) {
+	dec, err := dc.LookupDecoder(primitiveNullType)
+	if err != nil {
+		return false, err
+	}
+	return dec.DecodeValue(dc, vr, reflect.New(primitiveNullType).Elem()) == nil, nil
+}
+
 // WrappersCodec is codec for protobuf wrappers.
 type WrappersCodec struct {
 }
 
 // EncodeValue encodes protobuf wrappers value to BSON value.
-func (c *WrappersCodec) EncodeValue(ectx bsoncodec.EncodeContext, vw bsonrw.ValueWriter, val reflect.Value) error {
+func (c *WrappersCodec) EncodeValue(ec bsoncodec.EncodeContext, vw bsonrw.ValueWriter, val reflect.Value) error {
+	if val.IsNil() {
+		return encodeNull(ec, vw)
+	}
 	val = val.Elem().FieldByName("Value")
-	enc, err := ectx.LookupEncoder(val.Type())
+	enc, err := ec.LookupEncoder(val.Type())
 	if err != nil {
 		return err
 	}
-	return enc.EncodeValue(ectx, vw, val)
+	return enc.EncodeValue(ec, vw, val)
 }
 
 // DecodeValue decodes BSON value to protobuf wrappers value.
-func (c *WrappersCodec) DecodeValue(ectx bsoncodec.DecodeContext, vr bsonrw.ValueReader, val reflect.Value) error {
+func (c *WrappersCodec) DecodeValue(dc bsoncodec.DecodeContext, vr bsonrw.ValueReader, val reflect.Value) error {
+	if vr.ReadNull() == nil {
+		val.Set(reflect.New(val.Type()).Elem())
+		return nil
+	}
 	val = val.Elem().FieldByName("Value")
-	dec, err := ectx.LookupDecoder(val.Type())
+	dec, err := dc.LookupDecoder(val.Type())
 	if err != nil {
 		return err
 	}
-	return dec.DecodeValue(ectx, vr, val)
+	return dec.DecodeValue(dc, vr, val)
 }
 
 // RegisterWrappersCodec registers WrappersCodec.
@@ -67,6 +94,50 @@ func RegisterWrappersCodec(rb *bsoncodec.RegistryBuilder) *bsoncodec.RegistryBui
 		RegisterCodec(uint64ValueType, wrappersCodecRef)
 }
 
+// DurationCodec is codec for protobuf type Duration.
+type DurationCodec struct {
+}
+
+// EncodeValue encodes protobuf type Duration to BSON value.
+func (c *DurationCodec) EncodeValue(ec bsoncodec.EncodeContext, vw bsonrw.ValueWriter, val reflect.Value) error {
+	if val.IsNil() {
+		return encodeNull(ec, vw)
+	}
+	enc, err := ec.LookupEncoder(goDurationType)
+	if err != nil {
+		return err
+	}
+	v := val.Interface().(*durationpb.Duration)
+	if err = v.CheckValid(); err != nil {
+		return err
+	}
+	return enc.EncodeValue(ec, vw, reflect.ValueOf(v.AsDuration()))
+}
+
+// DecodeValue decodes BSON value to protobuf type Duration.
+func (c *DurationCodec) DecodeValue(dc bsoncodec.DecodeContext, vr bsonrw.ValueReader, val reflect.Value) error {
+	if vr.ReadNull() == nil {
+		val.Set(reflect.New(val.Type()).Elem())
+		return nil
+	}
+	dec, err := dc.LookupDecoder(goDurationType)
+	if err != nil {
+		return err
+	}
+	var d time.Duration
+	if err = dec.DecodeValue(dc, vr, reflect.ValueOf(&d).Elem()); err != nil {
+		return err
+	}
+	val.Set(reflect.ValueOf(durationpb.New(d)))
+	return nil
+}
+
+// RegisterDurationCodec registers DurationCodec.
+func RegisterDurationCodec(rb *bsoncodec.RegistryBuilder) *bsoncodec.RegistryBuilder {
+	durationCodecRef := new(DurationCodec)
+	return rb.RegisterCodec(durationType, durationCodecRef)
+}
+
 // TimestampCodec is codec for protobuf type Timestamp.
 type TimestampCodec struct {
 }
@@ -78,9 +149,8 @@ func (c *TimestampCodec) EncodeValue(ec bsoncodec.EncodeContext, vw bsonrw.Value
 		return err
 	}
 	var t time.Time
-	var v *timestamppb.Timestamp
-	v = val.Interface().(*timestamppb.Timestamp)
-	if v != nil {
+	v := val.Interface().(*timestamppb.Timestamp)
+	if !pbutil.IsTimestampZero(v) {
 		if err = v.CheckValid(); err != nil {
 			return err
 		}
@@ -91,15 +161,19 @@ func (c *TimestampCodec) EncodeValue(ec bsoncodec.EncodeContext, vw bsonrw.Value
 
 // DecodeValue decodes BSON value to protobuf type Timestamp.
 func (c *TimestampCodec) DecodeValue(dc bsoncodec.DecodeContext, vr bsonrw.ValueReader, val reflect.Value) error {
+	if vr.ReadNull() == nil {
+		val.Set(reflect.New(val.Type()).Elem())
+		return nil
+	}
 	dec, err := dc.LookupDecoder(goTimeType)
 	if err != nil {
 		return err
 	}
 	var t time.Time
-	var v *timestamppb.Timestamp
 	if err = dec.DecodeValue(dc, vr, reflect.ValueOf(&t).Elem()); err != nil {
 		return err
 	}
+	var v *timestamppb.Timestamp
 	if !t.IsZero() {
 		v = timestamppb.New(t)
 	}
