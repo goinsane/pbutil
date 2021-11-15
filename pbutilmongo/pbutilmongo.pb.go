@@ -20,7 +20,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type ObjectId struct {
+type ObjectID struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -28,8 +28,8 @@ type ObjectId struct {
 	Value string `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
 }
 
-func (x *ObjectId) Reset() {
-	*x = ObjectId{}
+func (x *ObjectID) Reset() {
+	*x = ObjectID{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_goinsane_pbutil_pbutilmongo_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -37,13 +37,13 @@ func (x *ObjectId) Reset() {
 	}
 }
 
-func (x *ObjectId) String() string {
+func (x *ObjectID) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ObjectId) ProtoMessage() {}
+func (*ObjectID) ProtoMessage() {}
 
-func (x *ObjectId) ProtoReflect() protoreflect.Message {
+func (x *ObjectID) ProtoReflect() protoreflect.Message {
 	mi := &file_goinsane_pbutil_pbutilmongo_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -55,12 +55,12 @@ func (x *ObjectId) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ObjectId.ProtoReflect.Descriptor instead.
-func (*ObjectId) Descriptor() ([]byte, []int) {
+// Deprecated: Use ObjectID.ProtoReflect.Descriptor instead.
+func (*ObjectID) Descriptor() ([]byte, []int) {
 	return file_goinsane_pbutil_pbutilmongo_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ObjectId) GetValue() string {
+func (x *ObjectID) GetValue() string {
 	if x != nil {
 		return x.Value
 	}
@@ -73,7 +73,7 @@ var file_goinsane_pbutil_pbutilmongo_proto_rawDesc = []byte{
 	0x0a, 0x21, 0x67, 0x6f, 0x69, 0x6e, 0x73, 0x61, 0x6e, 0x65, 0x2f, 0x70, 0x62, 0x75, 0x74, 0x69,
 	0x6c, 0x2f, 0x70, 0x62, 0x75, 0x74, 0x69, 0x6c, 0x6d, 0x6f, 0x6e, 0x67, 0x6f, 0x2e, 0x70, 0x72,
 	0x6f, 0x74, 0x6f, 0x12, 0x0f, 0x67, 0x6f, 0x69, 0x6e, 0x73, 0x61, 0x6e, 0x65, 0x2e, 0x70, 0x62,
-	0x75, 0x74, 0x69, 0x6c, 0x22, 0x20, 0x0a, 0x08, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x49, 0x64,
+	0x75, 0x74, 0x69, 0x6c, 0x22, 0x20, 0x0a, 0x08, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x49, 0x44,
 	0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
 	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x42, 0x28, 0x5a, 0x26, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
 	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x67, 0x6f, 0x69, 0x6e, 0x73, 0x61, 0x6e, 0x65, 0x2f, 0x70, 0x62,
@@ -95,7 +95,7 @@ func file_goinsane_pbutil_pbutilmongo_proto_rawDescGZIP() []byte {
 
 var file_goinsane_pbutil_pbutilmongo_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_goinsane_pbutil_pbutilmongo_proto_goTypes = []interface{}{
-	(*ObjectId)(nil), // 0: goinsane.pbutil.ObjectId
+	(*ObjectID)(nil), // 0: goinsane.pbutil.ObjectID
 }
 var file_goinsane_pbutil_pbutilmongo_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -112,7 +112,7 @@ func file_goinsane_pbutil_pbutilmongo_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_goinsane_pbutil_pbutilmongo_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ObjectId); i {
+			switch v := v.(*ObjectID); i {
 			case 0:
 				return &v.state
 			case 1:

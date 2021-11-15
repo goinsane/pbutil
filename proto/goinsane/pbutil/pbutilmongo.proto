@@ -2,6 +2,6 @@ syntax = "proto3";
 package goinsane.pbutil;
 option go_package = "github.com/goinsane/pbutil/pbutilmongo";
 
-message ObjectId{
+message ObjectID {
   string value = 1;
 }

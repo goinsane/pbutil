@@ -14,7 +14,8 @@ import (
 )
 
 var (
-	primitiveNullType = reflect.TypeOf(*new(primitive.Null))
+	primitiveNullType     = reflect.TypeOf(*new(primitive.Null))
+	primitiveObjectIDType = reflect.TypeOf(primitive.ObjectID{})
 
 	boolValueType   = reflect.TypeOf(new(wrapperspb.BoolValue))
 	bytesValueType  = reflect.TypeOf(new(wrapperspb.BytesValue))
@@ -29,9 +30,20 @@ var (
 	durationType  = reflect.TypeOf(new(durationpb.Duration))
 	timestampType = reflect.TypeOf(new(timestamppb.Timestamp))
 
+	objectIDType = reflect.TypeOf(new(ObjectID))
+
 	goDurationType = reflect.TypeOf(*new(time.Duration))
 	goTimeType     = reflect.TypeOf(*new(time.Time))
 )
+
+// RegisterAllCodecs registers all of implemented codecs.
+func RegisterAllCodecs(rb *bsoncodec.RegistryBuilder) *bsoncodec.RegistryBuilder {
+	rb = RegisterWrappersCodec(rb)
+	rb = RegisterDurationCodec(rb)
+	rb = RegisterTimestampCodec(rb)
+	rb = RegisterObjectIDCodec(rb)
+	return rb
+}
 
 func encodeNull(ec bsoncodec.EncodeContext, vw bsonrw.ValueWriter) error {
 	enc, err := ec.LookupEncoder(primitiveNullType)
@@ -185,4 +197,49 @@ func (c *TimestampCodec) DecodeValue(dc bsoncodec.DecodeContext, vr bsonrw.Value
 func RegisterTimestampCodec(rb *bsoncodec.RegistryBuilder) *bsoncodec.RegistryBuilder {
 	timestampCodecRef := new(TimestampCodec)
 	return rb.RegisterCodec(timestampType, timestampCodecRef)
+}
+
+// ObjectIDCodec is codec for protobuf type ObjectID.
+type ObjectIDCodec struct {
+}
+
+// EncodeValue encodes protobuf type ObjectID to BSON value.
+func (c *ObjectIDCodec) EncodeValue(ec bsoncodec.EncodeContext, vw bsonrw.ValueWriter, val reflect.Value) error {
+	if val.IsNil() {
+		return encodeNull(ec, vw)
+	}
+	enc, err := ec.LookupEncoder(primitiveObjectIDType)
+	if err != nil {
+		return err
+	}
+	v := val.Interface().(*ObjectID)
+	oid, err := primitive.ObjectIDFromHex(v.Value)
+	if err != nil {
+		return err
+	}
+	return enc.EncodeValue(ec, vw, reflect.ValueOf(oid))
+}
+
+// DecodeValue decodes BSON value to protobuf type ObjectID.
+func (c *ObjectIDCodec) DecodeValue(dc bsoncodec.DecodeContext, vr bsonrw.ValueReader, val reflect.Value) error {
+	if vr.ReadNull() == nil {
+		val.Set(reflect.New(val.Type()).Elem())
+		return nil
+	}
+	dec, err := dc.LookupDecoder(primitiveObjectIDType)
+	if err != nil {
+		return err
+	}
+	var oid primitive.ObjectID
+	if err = dec.DecodeValue(dc, vr, reflect.ValueOf(&oid).Elem()); err != nil {
+		return err
+	}
+	val.Set(reflect.ValueOf(&ObjectID{Value: oid.Hex()}))
+	return nil
+}
+
+// RegisterObjectIDCodec registers ObjectIDCodec.
+func RegisterObjectIDCodec(rb *bsoncodec.RegistryBuilder) *bsoncodec.RegistryBuilder {
+	objectIDCodecRef := new(ObjectIDCodec)
+	return rb.RegisterCodec(objectIDType, objectIDCodecRef)
 }
