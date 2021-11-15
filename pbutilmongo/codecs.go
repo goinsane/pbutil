@@ -4,8 +4,6 @@ import (
 	"reflect"
 	"time"
 
-	durationpb2 "github.com/goinsane/pbutil/types/known/durationpb"
-	timestamppb2 "github.com/goinsane/pbutil/types/known/timestamppb"
 	"go.mongodb.org/mongo-driver/bson/bsoncodec"
 	"go.mongodb.org/mongo-driver/bson/bsonrw"
 	"google.golang.org/protobuf/types/known/durationpb"
@@ -25,10 +23,7 @@ var (
 	uint64ValueType = reflect.TypeOf(new(wrapperspb.UInt64Value))
 
 	durationType  = reflect.TypeOf(new(durationpb.Duration))
-	duration2Type = reflect.TypeOf(new(durationpb2.Duration))
-
-	timestampType  = reflect.TypeOf(new(timestamppb.Timestamp))
-	timestamp2Type = reflect.TypeOf(new(timestamppb2.Timestamp))
+	timestampType = reflect.TypeOf(new(timestamppb.Timestamp))
 
 	goDurationType = reflect.TypeOf(*new(time.Duration))
 	goTimeType     = reflect.TypeOf(*new(time.Time))
