@@ -4,7 +4,6 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/goinsane/pbutil"
 	"go.mongodb.org/mongo-driver/bson/bsoncodec"
 	"go.mongodb.org/mongo-driver/bson/bsonrw"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -156,19 +155,18 @@ type TimestampCodec struct {
 
 // EncodeValue encodes protobuf type Timestamp to BSON value.
 func (c *TimestampCodec) EncodeValue(ec bsoncodec.EncodeContext, vw bsonrw.ValueWriter, val reflect.Value) error {
+	if val.IsNil() {
+		return encodeNull(ec, vw)
+	}
 	enc, err := ec.LookupEncoder(goTimeType)
 	if err != nil {
 		return err
 	}
-	var t time.Time
 	v := val.Interface().(*timestamppb.Timestamp)
-	if !pbutil.IsTimestampZero(v) {
-		if err = v.CheckValid(); err != nil {
-			return err
-		}
-		t = v.AsTime().UTC()
+	if err = v.CheckValid(); err != nil {
+		return err
 	}
-	return enc.EncodeValue(ec, vw, reflect.ValueOf(t))
+	return enc.EncodeValue(ec, vw, reflect.ValueOf(v.AsTime().UTC()))
 }
 
 // DecodeValue decodes BSON value to protobuf type Timestamp.
